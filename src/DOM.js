@@ -2,8 +2,9 @@ import { projectFactory } from "./factories"
 
 function renderProjects(projects) {
     let projectsTable = document.querySelector("#projectsTable");
-    removeAllChildren("projectsTable");
+    removeAllChildren("#projectsTable");
     for (let i = 0; i < projects.length; i++) {
+        if (projects[i] == undefined) continue;
         let tr = document.createElement("tr");
         let projectTitleTD = document.createElement("td");
         projectTitleTD.classList.add("projectName");
@@ -38,37 +39,6 @@ function renderProjects(projects) {
     projectsTable.appendChild(newBookTR);
 }
 
-function changeProjectName(projects) {
-    document.addEventListener("click", (event) => {
-        if (event.target.getAttribute("id") == "editProjectName") {
-            let oldProjectName = event.target.parentElement.parentElement.previousElementSibling.textContent;
-
-        }
-    });
-}
-
-function addNewProject(projects) {
-    document.addEventListener("click", (event) => {
-        if (event.target.getAttribute("id") == "addNewProject") {
-            addInputRow();
-        }
-        // Add project
-        if (event.target.getAttribute("id") == "addProjectFinal") {
-            let inputValue = document.getElementById("projectName").value;
-            if (!inputValue) return;
-            let newProject = projectFactory(inputValue);
-            projects.push(newProject);
-            deleteInputRow();
-            renderProjects(projects);
-        }
-        // Cancel adding project
-        if (event.target.getAttribute("id") == "cancelProject") {
-            document.getElementById("inputTR").remove();
-            renderProjects(projects);
-        }
-    });
-}
-
 function addInputRow() {
     let projectsTable = document.querySelector("#projectsTable");
     if (document.getElementById("newBookPlusButton")) document.getElementById("newBookPlusButton").remove();
@@ -83,14 +53,10 @@ function addInputRow() {
     textInput.setAttribute("id", "projectName");
     newInputTD.appendChild(textInput);
     let submitProjectNameTD = document.createElement("td");
-    let submitProjectNameButton = document.createElement("button");
-    submitProjectNameButton.setAttribute("type", "submit");
-    submitProjectNameButton.setAttribute("id", "submitProjectNameButton");
     let newI = document.createElement("i");
     newI.className = "fas fa-plus";
     newI.setAttribute("id", "addProjectFinal")
-    submitProjectNameButton.appendChild(newI);
-    submitProjectNameTD.appendChild(submitProjectNameButton);
+    submitProjectNameTD.appendChild(newI);
     newTR.appendChild(newInputTD);
     newTR.appendChild(submitProjectNameTD);
     let deleteTD = document.createElement("td");
@@ -124,7 +90,7 @@ function selectProject(projects) {
 
 function showtoDos(eventName, projects) {
     let toDosTable = document.querySelector("#toDosTable");
-    removeAllChildren("toDosTable");
+    removeAllChildren("#toDosTable");
     projects.forEach(project => {
         if (project.title == eventName) {
             for (let toDo in project) {
@@ -146,11 +112,18 @@ function toDoModalHandler() {
     })
 }
 
-function removeAllChildren(elementID) {
-    const myNode = document.querySelector("#" + elementID);
+function removeAllChildren(querySelector) {
+    const myNode = document.querySelector(querySelector);
     while (myNode.firstChild) {
       myNode.removeChild(myNode.firstChild);
     }
 }
 
-export { renderProjects, selectProject, addNewProject }
+function removeAllChildrenOfNode(node) {
+    const myNode = node;
+    while (myNode.firstChild) {
+      myNode.removeChild(myNode.firstChild);
+    }
+}
+
+export { renderProjects, addInputRow, deleteInputRow, selectProject, removeAllChildrenOfNode }

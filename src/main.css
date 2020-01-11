@@ -4,7 +4,6 @@ body {
 
 a {
   margin-top: 0.15rem;
-  border: 1px solid black;
 }
 
 .fa-plus {
@@ -12,7 +11,7 @@ a {
   cursor: pointer;
 }
 
-#cancelProject {
+#cancelProject, #cancelProjectRename {
   margin-top: 0.5rem;
 }
 
@@ -24,4 +23,8 @@ a {
 
 #newBookPlusButton:hover {
   background-color: white;
+}
+
+small {
+  padding-left: 1rem;
 }

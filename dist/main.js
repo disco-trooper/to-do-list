@@ -146,7 +146,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "body {\n  font-size: 10px;\n}\n\na {\n  margin-top: 0.15rem;\n  border: 1px solid black;\n}\n\n.fa-plus {\n  margin-top: 0.7rem;\n  cursor: pointer;\n}\n\n#cancelProject {\n  margin-top: 0.5rem;\n}\n\n#submitProjectNameButton {\n  border: 0;\n  background: none!important;\n  outline: none;\n}\n\n#newBookPlusButton:hover {\n  background-color: white;\n}", ""]);
+exports.push([module.i, "body {\n  font-size: 10px;\n}\n\na {\n  margin-top: 0.15rem;\n}\n\n.fa-plus {\n  margin-top: 0.7rem;\n  cursor: pointer;\n}\n\n#cancelProject, #cancelProjectRename {\n  margin-top: 0.5rem;\n}\n\n#submitProjectNameButton {\n  border: 0;\n  background: none!important;\n  outline: none;\n}\n\n#newBookPlusButton:hover {\n  background-color: white;\n}\n\nsmall {\n  padding-left: 1rem;\n}", ""]);
 // Exports
 module.exports = exports;
 
@@ -3367,21 +3367,24 @@ module.exports = function (moduleId, list, options) {
 /*!********************!*\
   !*** ./src/DOM.js ***!
   \********************/
-/*! exports provided: renderProjects, selectProject, addNewProject */
+/*! exports provided: renderProjects, addInputRow, deleteInputRow, selectProject, removeAllChildrenOfNode */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderProjects", function() { return renderProjects; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addInputRow", function() { return addInputRow; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteInputRow", function() { return deleteInputRow; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectProject", function() { return selectProject; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addNewProject", function() { return addNewProject; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeAllChildrenOfNode", function() { return removeAllChildrenOfNode; });
 /* harmony import */ var _factories__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./factories */ "./src/factories.js");
 
 
 function renderProjects(projects) {
     let projectsTable = document.querySelector("#projectsTable");
-    removeAllChildren("projectsTable");
+    removeAllChildren("#projectsTable");
     for (let i = 0; i < projects.length; i++) {
+        if (projects[i] == undefined) continue;
         let tr = document.createElement("tr");
         let projectTitleTD = document.createElement("td");
         projectTitleTD.classList.add("projectName");
@@ -3416,37 +3419,6 @@ function renderProjects(projects) {
     projectsTable.appendChild(newBookTR);
 }
 
-function changeProjectName(projects) {
-    document.addEventListener("click", (event) => {
-        if (event.target.getAttribute("id") == "editProjectName") {
-            let oldProjectName = event.target.parentElement.parentElement.previousElementSibling.textContent;
-
-        }
-    });
-}
-
-function addNewProject(projects) {
-    document.addEventListener("click", (event) => {
-        if (event.target.getAttribute("id") == "addNewProject") {
-            addInputRow();
-        }
-        // Add project
-        if (event.target.getAttribute("id") == "addProjectFinal") {
-            let inputValue = document.getElementById("projectName").value;
-            if (!inputValue) return;
-            let newProject = Object(_factories__WEBPACK_IMPORTED_MODULE_0__["projectFactory"])(inputValue);
-            projects.push(newProject);
-            deleteInputRow();
-            renderProjects(projects);
-        }
-        // Cancel adding project
-        if (event.target.getAttribute("id") == "cancelProject") {
-            document.getElementById("inputTR").remove();
-            renderProjects(projects);
-        }
-    });
-}
-
 function addInputRow() {
     let projectsTable = document.querySelector("#projectsTable");
     if (document.getElementById("newBookPlusButton")) document.getElementById("newBookPlusButton").remove();
@@ -3461,14 +3433,10 @@ function addInputRow() {
     textInput.setAttribute("id", "projectName");
     newInputTD.appendChild(textInput);
     let submitProjectNameTD = document.createElement("td");
-    let submitProjectNameButton = document.createElement("button");
-    submitProjectNameButton.setAttribute("type", "submit");
-    submitProjectNameButton.setAttribute("id", "submitProjectNameButton");
     let newI = document.createElement("i");
     newI.className = "fas fa-plus";
     newI.setAttribute("id", "addProjectFinal")
-    submitProjectNameButton.appendChild(newI);
-    submitProjectNameTD.appendChild(submitProjectNameButton);
+    submitProjectNameTD.appendChild(newI);
     newTR.appendChild(newInputTD);
     newTR.appendChild(submitProjectNameTD);
     let deleteTD = document.createElement("td");
@@ -3502,7 +3470,7 @@ function selectProject(projects) {
 
 function showtoDos(eventName, projects) {
     let toDosTable = document.querySelector("#toDosTable");
-    removeAllChildren("toDosTable");
+    removeAllChildren("#toDosTable");
     projects.forEach(project => {
         if (project.title == eventName) {
             for (let toDo in project) {
@@ -3524,11 +3492,154 @@ function toDoModalHandler() {
     })
 }
 
-function removeAllChildren(elementID) {
-    const myNode = document.querySelector("#" + elementID);
+function removeAllChildren(querySelector) {
+    const myNode = document.querySelector(querySelector);
     while (myNode.firstChild) {
       myNode.removeChild(myNode.firstChild);
     }
+}
+
+function removeAllChildrenOfNode(node) {
+    const myNode = node;
+    while (myNode.firstChild) {
+      myNode.removeChild(myNode.firstChild);
+    }
+}
+
+
+
+/***/ }),
+
+/***/ "./src/data.js":
+/*!*********************!*\
+  !*** ./src/data.js ***!
+  \*********************/
+/*! exports provided: projectHandler */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "projectHandler", function() { return projectHandler; });
+/* harmony import */ var _DOM__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DOM */ "./src/DOM.js");
+/* harmony import */ var _factories__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./factories */ "./src/factories.js");
+
+
+
+function projectHandler(projects) {
+    Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["renderProjects"])(projects);
+    addNewProject(projects);
+    changeProjectName(projects);
+    removeProject(projects);
+    Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["selectProject"])(projects);
+}
+
+function addNewProject(projects) {
+    document.addEventListener("click", (event) => {
+        if (event.target.getAttribute("id") == "addNewProject") {
+            Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["addInputRow"])();
+        }
+        // Add project
+        if (event.target.getAttribute("id") == "addProjectFinal") {
+            let inputValue = document.getElementById("projectName").value;
+            if (!inputValue) return;
+            let newProject = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["projectFactory"])(inputValue);
+            projects.push(newProject);
+            Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["deleteInputRow"])();
+            Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["renderProjects"])(projects);
+        }
+        // Cancel adding project
+        if (event.target.getAttribute("id") == "cancelProject") {
+            document.getElementById("inputTR").remove();
+            Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["renderProjects"])(projects);
+        }
+    });
+}
+
+function changeProjectName(projects) {
+    let oldName;
+    document.addEventListener("click", (event) => {
+        if (event.target.getAttribute("id") == "editProjectName") {
+            oldName = event.target.parentElement.parentElement.previousElementSibling.textContent;
+            let projectRow = event.target.parentElement.parentElement.parentElement;
+            Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["removeAllChildrenOfNode"])(projectRow);
+            // Add project name input row
+            let newInputTD = document.createElement("td");
+            newInputTD.setAttribute("id", "changeProjectNameInout");
+            let textInput = document.createElement("input");
+            textInput.classList.add("input");
+            textInput.setAttribute("placeholder", "Project Name");
+            textInput.setAttribute("type", "text");
+            textInput.setAttribute("id", "changeProjectNameInput");
+            newInputTD.appendChild(textInput);
+            let submitProjectNameTD = document.createElement("td");
+            let newI = document.createElement("i");
+            newI.className = "fas fa-plus";
+            newI.setAttribute("id", "changeProjectNameI")
+            submitProjectNameTD.appendChild(newI);
+            projectRow.appendChild(newInputTD);
+            projectRow.appendChild(submitProjectNameTD);
+            let deleteTD = document.createElement("td");
+            let deleteA = document.createElement("a");
+            deleteA.className = "delete";
+            deleteA.setAttribute("id", "cancelProjectRename");
+            deleteTD.appendChild(deleteA);
+            projectRow.appendChild(deleteTD)
+        }
+
+        if (event.target.getAttribute("id") == "changeProjectNameI") {
+            if (document.getElementById("changeProjectNameInput").value) {
+                var newName = document.getElementById("changeProjectNameInput").value;
+                let tr = event.target.parentElement.parentElement;
+                Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["removeAllChildrenOfNode"])(tr);
+                let projectTitleTD = document.createElement("td");
+                projectTitleTD.classList.add("projectName");
+                projectTitleTD.textContent = newName;
+                tr.appendChild(projectTitleTD);
+                let editSpan = document.createElement("span");
+                editSpan.classList.add("icon");
+                let editI = document.createElement("i");
+                editI.className = "fas fa-edit";
+                editI.setAttribute("id", "editProjectName");
+                editSpan.appendChild(editI);
+                let editTD = document.createElement("td");
+                editTD.appendChild(editSpan);
+                tr.appendChild(editTD);
+                let deleteTD = document.createElement("td");
+                let deleteA = document.createElement("a");
+                deleteA.className = "delete";
+                deleteA.setAttribute("id", "deleteProject");
+                deleteTD.appendChild(deleteA);
+                tr.appendChild(deleteTD);
+                projects.forEach(project => {
+                    if (project.title == oldName) {
+                        project.title = newName;
+                    }
+                })
+            }
+        }
+        if (event.target.getAttribute("id") == "cancelProjectRename") Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["renderProjects"])(projects);
+    });
+}
+
+function removeProject(projects) {
+    let projectName;
+    document.addEventListener("click", (event) => {
+        if (event.target.getAttribute("id") == "deleteProject") {
+            projectName = event.target.parentElement.parentElement.firstChild.textContent;
+            for (let i = 0; i < projects.length; i++) {
+                if (projects[i] == undefined) {
+                    projects.splice(i, 1);
+                }
+            }
+            for (let i = 0; i < projects.length; i++) {
+                if (projects[i].title == projectName) {
+                    projects[i] = undefined;
+                    Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["renderProjects"])(projects);
+                    return;
+                }
+            }
+        }
+    })
 }
 
 
@@ -3570,7 +3681,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _main_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./main.css */ "./src/main.css");
 /* harmony import */ var _main_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_main_css__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _factories__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./factories */ "./src/factories.js");
-/* harmony import */ var _DOM__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DOM */ "./src/DOM.js");
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./data */ "./src/data.js");
 /* harmony import */ var bulma_css_bulma_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! bulma/css/bulma.css */ "./node_modules/bulma/css/bulma.css");
 /* harmony import */ var bulma_css_bulma_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(bulma_css_bulma_css__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var date_fns_format__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! date-fns/format */ "./node_modules/date-fns/esm/format/index.js");
@@ -3588,9 +3699,8 @@ let toDo4 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["todoFactory"])("Rice
 let project1 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["projectFactory"])("School", toDo1, toDo2);
 let project2 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["projectFactory"])("Home", toDo3, toDo4);
 let projects = [project1, project2];
-Object(_DOM__WEBPACK_IMPORTED_MODULE_2__["renderProjects"])(projects);
-Object(_DOM__WEBPACK_IMPORTED_MODULE_2__["selectProject"])(projects);
-Object(_DOM__WEBPACK_IMPORTED_MODULE_2__["addNewProject"])(projects);
+Object(_data__WEBPACK_IMPORTED_MODULE_2__["projectHandler"])(projects);
+
 const newYears = new Date("2019-3-13");
 const formattedDate = Object(date_fns_format__WEBPACK_IMPORTED_MODULE_4__["default"])(newYears, 'do MMM yyyy');
 document.addEventListener("click", (event) => console.log(event.target));
