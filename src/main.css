@@ -1,0 +1,27 @@
+body {
+  font-size: 10px;
+}
+
+a {
+  margin-top: 0.15rem;
+  border: 1px solid black;
+}
+
+.fa-plus {
+  margin-top: 0.7rem;
+  cursor: pointer;
+}
+
+#cancelProject {
+  margin-top: 0.5rem;
+}
+
+#submitProjectNameButton {
+  border: 0;
+  background: none!important;
+  outline: none;
+}
+
+#newBookPlusButton:hover {
+  background-color: white;
+}

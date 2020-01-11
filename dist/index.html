@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do-List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+  <script src="https://kit.fontawesome.com/b39a2b6d31.js" crossorigin="anonymous"></script>
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <!-- Hero -->
+  <div class="hero is-dark is-bold">
+    <div class="hero-body">
+      <div class="container is-fluid">
+        <h1 class="title is-2">To-Do-List</h1>
+        <h2 class="subtitle">Get stuff done</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projects and ToDos section -->
+  <section class="section">
+    <!-- Projects and toDos -->
+    <div class="columns">
+      <!-- Projects -->
+      <div class="column is-one-third">
+        <div class="container">
+          <h3 class="title">Projects</h3>
+            <table class="table is-hoverable">
+              <tbody id="projectsTable">
+              </tbody>
+            </table>
+          </div>
+      </div>
+
+      <!-- ToDos -->
+      <div class="column">
+        <div class="column is-one-third">
+          <div class="container">
+            <h3 class="title">ToDos</h3>
+              <table class="table">
+                <tbody id="toDosTable">
+                </tbody>
+              </table>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- New toDo form
+    <div class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box">
+        <h2 class="title is-3">Add New Project</h2>
+        <div class="field">
+          <label class="label">Project Title</label>
+          <div class="control">
+            <input class="input" placeholder="Project Title" type="text" id="title" name="title" required/>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Project Description</label>
+          <div class="control">
+            <input class="input" placeholder="Project Description" type="text" id="description" name="description" required/>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Due Date</label>
+          <div class="control">
+            <input class="input" placeholder="DD/MM/YYYY" pattern="[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$" type="text" id="date" name="date" required/>
+          </div>
+        </div>
+      <div class="field">
+        <label class="label">Priority</label>
+        <div class="control">
+          <div class="select">
+            <select name="priority" id="priority">
+              <option value="!" selected>!</option>
+              <option value="!!">!!</option>
+              <option value="!!!">!!!</option>
+            </select>
+          </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+      </div>
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-dark" id="addProject">Add Project</button>
+        </div>
+        <div class="control">
+          <button class="button cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+    -->
+
+</body>
+</html>
