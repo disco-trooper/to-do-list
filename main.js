@@ -146,7 +146,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "body {\n  font-size: 10px;\n}\n\na {\n  margin-top: 0.15rem;\n}\n\n.fa-plus {\n  margin-top: 0.7rem;\n  cursor: pointer;\n}\n\n#cancelProject, #cancelProjectRename {\n  margin-top: 0.5rem;\n}\n\n#submitProjectNameButton {\n  border: 0;\n  background: none!important;\n  outline: none;\n}\n\n#newBookPlusButton:hover {\n  background-color: white;\n}\n\nsmall {\n  padding-left: 1rem;\n}", ""]);
+exports.push([module.i, "body {\n  font-size: 10px;\n}\n\na {\n  margin-top: 0.15rem;\n}\n\n.fa-plus {\n  margin-top: 0.7rem;\n  cursor: pointer;\n}\n\n#cancelProject, #cancelProjectRename {\n  margin-top: 0.5rem;\n}\n\n#submitProjectNameButton {\n  border: 0;\n  background: none!important;\n  outline: none;\n}\n\n#newBookPlusButton:hover {\n  background-color: white;\n}\n\nsmall {\n  padding-left: 1rem;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -3367,17 +3367,21 @@ module.exports = function (moduleId, list, options) {
 /*!********************!*\
   !*** ./src/DOM.js ***!
   \********************/
-/*! exports provided: renderProjects, addInputRow, deleteInputRow, selectProject, removeAllChildrenOfNode */
+/*! exports provided: renderProjects, addNewProjectInputRow, addProjectNameInputRow, addRenamedProjectRow, deleteInputRow, selectProject, removeAllChildrenOfNode */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderProjects", function() { return renderProjects; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addInputRow", function() { return addInputRow; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addNewProjectInputRow", function() { return addNewProjectInputRow; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addProjectNameInputRow", function() { return addProjectNameInputRow; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addRenamedProjectRow", function() { return addRenamedProjectRow; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteInputRow", function() { return deleteInputRow; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectProject", function() { return selectProject; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeAllChildrenOfNode", function() { return removeAllChildrenOfNode; });
 /* harmony import */ var _factories__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./factories */ "./src/factories.js");
+/* harmony import */ var date_fns_format__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns/format */ "./node_modules/date-fns/esm/format/index.js");
+
 
 
 function renderProjects(projects) {
@@ -3419,7 +3423,53 @@ function renderProjects(projects) {
     projectsTable.appendChild(newBookTR);
 }
 
-function addInputRow() {
+function addRenamedProjectRow(node, newName) {
+    let projectTitleTD = document.createElement("td");
+    projectTitleTD.classList.add("projectName");
+    projectTitleTD.textContent = newName;
+    node.appendChild(projectTitleTD);
+    let editSpan = document.createElement("span");
+    editSpan.classList.add("icon");
+    let editI = document.createElement("i");
+    editI.className = "fas fa-edit";
+    editI.setAttribute("id", "editProjectName");
+    editSpan.appendChild(editI);
+    let editTD = document.createElement("td");
+    editTD.appendChild(editSpan);
+    node.appendChild(editTD);
+    let deleteTD = document.createElement("td");
+    let deleteA = document.createElement("a");
+    deleteA.className = "delete";
+    deleteA.setAttribute("id", "deleteProject");
+    deleteTD.appendChild(deleteA);
+    node.appendChild(deleteTD);
+}
+
+function addProjectNameInputRow(node) {
+    let newInputTD = document.createElement("td");
+    newInputTD.setAttribute("id", "changeProjectNameInout");
+    let textInput = document.createElement("input");
+    textInput.classList.add("input");
+    textInput.setAttribute("placeholder", "Project Name");
+    textInput.setAttribute("type", "text");
+    textInput.setAttribute("id", "changeProjectNameInput");
+    newInputTD.appendChild(textInput);
+    let submitProjectNameTD = document.createElement("td");
+    let newI = document.createElement("i");
+    newI.className = "fas fa-plus";
+    newI.setAttribute("id", "changeProjectNameI")
+    submitProjectNameTD.appendChild(newI);
+    node.appendChild(newInputTD);
+    node.appendChild(submitProjectNameTD);
+    let deleteTD = document.createElement("td");
+    let deleteA = document.createElement("a");
+    deleteA.className = "delete";
+    deleteA.setAttribute("id", "cancelProjectRename");
+    deleteTD.appendChild(deleteA);
+    node.appendChild(deleteTD)
+}
+
+function addNewProjectInputRow() {
     let projectsTable = document.querySelector("#projectsTable");
     if (document.getElementById("newBookPlusButton")) document.getElementById("newBookPlusButton").remove();
     let newTR = document.createElement("tr");
@@ -3469,20 +3519,61 @@ function selectProject(projects) {
 }
 
 function showtoDos(eventName, projects) {
-    let toDosTable = document.querySelector("#toDosTable");
-    removeAllChildren("#toDosTable");
+    removeAllChildren("#column0");
+    removeAllChildren("#column1");
     projects.forEach(project => {
         if (project.title == eventName) {
+            let currentColumn = 0;
             for (let toDo in project) {
-                let tr = document.createElement("tr");
-                let toDoTitle = document.createElement("td");
-                toDoTitle.textContent = project[toDo].title;
-                tr.appendChild(toDoTitle);
-                toDosTable.appendChild(tr);
+                if (toDo == "title") continue;
+                let column = document.querySelector("#column" + `${currentColumn}`);
+                (!currentColumn) ? currentColumn++ : currentColumn--;
+                let desc = document.createTextNode(project[toDo].desc);
+                let divBox = document.createElement("div");
+                divBox.className = "box";
+                let article = document.createElement("article");
+                article.className = "media";
+                let divMediaContent = document.createElement("div");
+                divMediaContent.className = "media-content";
+                let divContent = document.createElement("div");
+                divContent.className = "content";
+                let p = document.createElement("p");
+                let strongTitle = document.createElement("strong");
+                strongTitle.textContent = project[toDo].title;
+                p.appendChild(strongTitle);
+                let smallDueDate = document.createElement("small");
+                const date = new Date(project[toDo].dueDate);
+                const formattedDate = Object(date_fns_format__WEBPACK_IMPORTED_MODULE_1__["default"])(date, 'do MMM yyyy');
+                smallDueDate.textContent = "Due: " + formattedDate;
+                p.appendChild(smallDueDate);
+                let br = document.createElement("br");
+                p.appendChild(br);
+                p.appendChild(desc);
+                divContent.appendChild(p);
+                divMediaContent.appendChild(divContent);
+                article.appendChild(divMediaContent);
+                divBox.appendChild(article);
+                column.appendChild(divBox);
             }
         }
     })
 }
+
+/*
+<div class="box">
+    <article class="media">
+        <div class="media-content">
+            <div class="content">
+                <p>
+                    <strong>Úkliddddddd</strong> <small>Due: 13th Jan 2019</small>
+                    <br>
+                    Uklidit v pokojíku.
+                </p>
+            </div>
+        </div>
+    </article>
+</div>
+*/
 
 function toDoModalHandler() {
     document.addEventListener("click", (event) => {
@@ -3536,7 +3627,7 @@ function projectHandler(projects) {
 function addNewProject(projects) {
     document.addEventListener("click", (event) => {
         if (event.target.getAttribute("id") == "addNewProject") {
-            Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["addInputRow"])();
+            Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["addNewProjectInputRow"])();
         }
         // Add project
         if (event.target.getAttribute("id") == "addProjectFinal") {
@@ -3558,58 +3649,22 @@ function addNewProject(projects) {
 function changeProjectName(projects) {
     let oldName;
     document.addEventListener("click", (event) => {
+        // Brings up name prompts
         if (event.target.getAttribute("id") == "editProjectName") {
             oldName = event.target.parentElement.parentElement.previousElementSibling.textContent;
             let projectRow = event.target.parentElement.parentElement.parentElement;
             Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["removeAllChildrenOfNode"])(projectRow);
             // Add project name input row
-            let newInputTD = document.createElement("td");
-            newInputTD.setAttribute("id", "changeProjectNameInout");
-            let textInput = document.createElement("input");
-            textInput.classList.add("input");
-            textInput.setAttribute("placeholder", "Project Name");
-            textInput.setAttribute("type", "text");
-            textInput.setAttribute("id", "changeProjectNameInput");
-            newInputTD.appendChild(textInput);
-            let submitProjectNameTD = document.createElement("td");
-            let newI = document.createElement("i");
-            newI.className = "fas fa-plus";
-            newI.setAttribute("id", "changeProjectNameI")
-            submitProjectNameTD.appendChild(newI);
-            projectRow.appendChild(newInputTD);
-            projectRow.appendChild(submitProjectNameTD);
-            let deleteTD = document.createElement("td");
-            let deleteA = document.createElement("a");
-            deleteA.className = "delete";
-            deleteA.setAttribute("id", "cancelProjectRename");
-            deleteTD.appendChild(deleteA);
-            projectRow.appendChild(deleteTD)
+            Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["addProjectNameInputRow"])(projectRow);
         }
 
+        // Changes the name
         if (event.target.getAttribute("id") == "changeProjectNameI") {
             if (document.getElementById("changeProjectNameInput").value) {
-                var newName = document.getElementById("changeProjectNameInput").value;
+                let newName = document.getElementById("changeProjectNameInput").value;
                 let tr = event.target.parentElement.parentElement;
                 Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["removeAllChildrenOfNode"])(tr);
-                let projectTitleTD = document.createElement("td");
-                projectTitleTD.classList.add("projectName");
-                projectTitleTD.textContent = newName;
-                tr.appendChild(projectTitleTD);
-                let editSpan = document.createElement("span");
-                editSpan.classList.add("icon");
-                let editI = document.createElement("i");
-                editI.className = "fas fa-edit";
-                editI.setAttribute("id", "editProjectName");
-                editSpan.appendChild(editI);
-                let editTD = document.createElement("td");
-                editTD.appendChild(editSpan);
-                tr.appendChild(editTD);
-                let deleteTD = document.createElement("td");
-                let deleteA = document.createElement("a");
-                deleteA.className = "delete";
-                deleteA.setAttribute("id", "deleteProject");
-                deleteTD.appendChild(deleteA);
-                tr.appendChild(deleteTD);
+                Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["addRenamedProjectRow"])(tr, newName);
                 projects.forEach(project => {
                     if (project.title == oldName) {
                         project.title = newName;
@@ -3691,14 +3746,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-let toDo1 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["todoFactory"])("Civil process", "Learn the civil process", "Today", "***");
-let toDo2 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["todoFactory"])("Family law", "Learn the family law", "Today", "**");
-let toDo3 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["todoFactory"])("Cleanup", "Clean the bedroom", "Tomorrow", "*");
-let toDo4 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["todoFactory"])("Rice", "Cook rice", "Today", "***");
+let toDo1 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["todoFactory"])("Civil process", "Learn the civil process", "2020-1-14", "!!!");
+let toDo2 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["todoFactory"])("Family law", "Learn the family law", "2020-1-14", "!!");
+let toDo3 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["todoFactory"])("Cleanup", "Clean the bedroom", "2020-1-14", "!");
+let toDo4 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["todoFactory"])("Rice", "Cook rice", "2020-1-14", "!!");
 
 let project1 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["projectFactory"])("School", toDo1, toDo2);
 let project2 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["projectFactory"])("Home", toDo3, toDo4);
 let projects = [project1, project2];
+console.log(projects)
 Object(_data__WEBPACK_IMPORTED_MODULE_2__["projectHandler"])(projects);
 
 const newYears = new Date("2019-3-13");
