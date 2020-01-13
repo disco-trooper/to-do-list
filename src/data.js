@@ -1,4 +1,4 @@
-import { renderProjects, addInputRow, deleteInputRow,removeAllChildrenOfNode, selectProject } from "./DOM"
+import { renderProjects, addNewProjectInputRow, deleteInputRow,removeAllChildrenOfNode, selectProject, addProjectNameInputRow, addRenamedProjectRow } from "./DOM"
 import { projectFactory } from "./factories"
 
 function projectHandler(projects) {
@@ -12,7 +12,7 @@ function projectHandler(projects) {
 function addNewProject(projects) {
     document.addEventListener("click", (event) => {
         if (event.target.getAttribute("id") == "addNewProject") {
-            addInputRow();
+            addNewProjectInputRow();
         }
         // Add project
         if (event.target.getAttribute("id") == "addProjectFinal") {
@@ -34,58 +34,22 @@ function addNewProject(projects) {
 function changeProjectName(projects) {
     let oldName;
     document.addEventListener("click", (event) => {
+        // Brings up name prompts
         if (event.target.getAttribute("id") == "editProjectName") {
             oldName = event.target.parentElement.parentElement.previousElementSibling.textContent;
             let projectRow = event.target.parentElement.parentElement.parentElement;
             removeAllChildrenOfNode(projectRow);
             // Add project name input row
-            let newInputTD = document.createElement("td");
-            newInputTD.setAttribute("id", "changeProjectNameInout");
-            let textInput = document.createElement("input");
-            textInput.classList.add("input");
-            textInput.setAttribute("placeholder", "Project Name");
-            textInput.setAttribute("type", "text");
-            textInput.setAttribute("id", "changeProjectNameInput");
-            newInputTD.appendChild(textInput);
-            let submitProjectNameTD = document.createElement("td");
-            let newI = document.createElement("i");
-            newI.className = "fas fa-plus";
-            newI.setAttribute("id", "changeProjectNameI")
-            submitProjectNameTD.appendChild(newI);
-            projectRow.appendChild(newInputTD);
-            projectRow.appendChild(submitProjectNameTD);
-            let deleteTD = document.createElement("td");
-            let deleteA = document.createElement("a");
-            deleteA.className = "delete";
-            deleteA.setAttribute("id", "cancelProjectRename");
-            deleteTD.appendChild(deleteA);
-            projectRow.appendChild(deleteTD)
+            addProjectNameInputRow(projectRow);
         }
 
+        // Changes the name
         if (event.target.getAttribute("id") == "changeProjectNameI") {
             if (document.getElementById("changeProjectNameInput").value) {
-                var newName = document.getElementById("changeProjectNameInput").value;
+                let newName = document.getElementById("changeProjectNameInput").value;
                 let tr = event.target.parentElement.parentElement;
                 removeAllChildrenOfNode(tr);
-                let projectTitleTD = document.createElement("td");
-                projectTitleTD.classList.add("projectName");
-                projectTitleTD.textContent = newName;
-                tr.appendChild(projectTitleTD);
-                let editSpan = document.createElement("span");
-                editSpan.classList.add("icon");
-                let editI = document.createElement("i");
-                editI.className = "fas fa-edit";
-                editI.setAttribute("id", "editProjectName");
-                editSpan.appendChild(editI);
-                let editTD = document.createElement("td");
-                editTD.appendChild(editSpan);
-                tr.appendChild(editTD);
-                let deleteTD = document.createElement("td");
-                let deleteA = document.createElement("a");
-                deleteA.className = "delete";
-                deleteA.setAttribute("id", "deleteProject");
-                deleteTD.appendChild(deleteA);
-                tr.appendChild(deleteTD);
+                addRenamedProjectRow(tr, newName);
                 projects.forEach(project => {
                     if (project.title == oldName) {
                         project.title = newName;
