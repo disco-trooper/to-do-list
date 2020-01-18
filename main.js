@@ -146,7 +146,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, "body {\n  font-size: 10px;\n}\n\na {\n  margin-top: 0.15rem;\n}\n\n.fa-plus {\n  margin-top: 0.7rem;\n  cursor: pointer;\n}\n\n#cancelProject, #cancelProjectRename {\n  margin-top: 0.5rem;\n}\n\n#submitProjectNameButton {\n  border: 0;\n  background: none!important;\n  outline: none;\n}\n\n#newBookPlusButton:hover {\n  background-color: white;\n}\n\nsmall {\n  padding-left: 1rem;\n}\n", ""]);
+exports.push([module.i, "body {\n  font-size: 10px;\n}\n\na {\n  margin-top: 0.15rem;\n}\n\n.fa-plus {\n  margin-top: 0.7rem;\n  cursor: pointer;\n}\n\n#cancelProject, #cancelProjectRename {\n  margin-top: 0.5rem;\n}\n\n#submitProjectNameButton {\n  border: 0;\n  background: none!important;\n  outline: none;\n}\n\n#newBookPlusButton:hover {\n  background-color: white;\n}\n\n.dueDate {\n  padding-left: 1rem;\n}\n\n.exclamationMark {\n  padding-left: 1rem;\n}\n\n.smallEdit {\n  padding-left: 1.5rem;\n}\n\n.smallEdit:hover {\n  color: grey;\n}\n\n#addTodo {\n  margin-top: 1rem;\n}\n\n.deleteTodo {\n  margin-left: 1rem;\n}", ""]);
 // Exports
 module.exports = exports;
 
@@ -3367,14 +3367,17 @@ module.exports = function (moduleId, list, options) {
 /*!********************!*\
   !*** ./src/DOM.js ***!
   \********************/
-/*! exports provided: renderProjects, addNewProjectInputRow, addProjectNameInputRow, addRenamedProjectRow, deleteInputRow, selectProject, removeAllChildrenOfNode */
+/*! exports provided: addTodoModalHandler, showtoDos, editTodoModalHandler, renderProjects, addNewProjectInputRow, addChangeProjectNameInputRow, addRenamedProjectRow, deleteInputRow, selectProject, removeAllChildrenOfNode */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addTodoModalHandler", function() { return addTodoModalHandler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showtoDos", function() { return showtoDos; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editTodoModalHandler", function() { return editTodoModalHandler; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderProjects", function() { return renderProjects; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addNewProjectInputRow", function() { return addNewProjectInputRow; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addProjectNameInputRow", function() { return addProjectNameInputRow; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addChangeProjectNameInputRow", function() { return addChangeProjectNameInputRow; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addRenamedProjectRow", function() { return addRenamedProjectRow; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteInputRow", function() { return deleteInputRow; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectProject", function() { return selectProject; });
@@ -3383,6 +3386,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var date_fns_format__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns/format */ "./node_modules/date-fns/esm/format/index.js");
 
 
+
+function editTodoModalHandler(event) {
+    // Close Edit To-Do Modal
+    if (event.target.getAttribute("id") == "editTodoModalBackground" || event.target.getAttribute("id") == "editTodoModalClose" || event.target.classList.contains("cancel")){
+        let editTodoModal = document.querySelector("#editTodo");
+        editTodoModal.classList.remove("is-active");
+    }
+    messageModalHandler(event);
+}
+
+function addTodoModalHandler(event) {
+    // Close Edit To-Do Modal
+    if (event.target.getAttribute("id") == "addTodoModalBackground" || event.target.getAttribute("id") == "addTodoModalClose" || event.target.classList.contains("cancel")){
+        let addTodoModal = document.querySelector("#addTodoModal");
+        addTodoModal.classList.remove("is-active");
+    }
+    messageModalHandler(event);
+}
+
+function messageModalHandler(event) {
+    // Close date message
+    if (event.target.getAttribute("id") == "messageBackgroundDate" || event.target.getAttribute("id") == "messageCloseDate") {
+        document.querySelector("#messageDate").classList.remove("is-active");
+    }
+
+    // Close title message
+    if (event.target.getAttribute("id") == "messageBackgroundTitle" || event.target.getAttribute("id") == "messageCloseTitle") {
+        document.querySelector("#messageTitle").classList.remove("is-active");
+    }
+}
 
 function renderProjects(projects) {
     let projectsTable = document.querySelector("#projectsTable");
@@ -3445,7 +3478,7 @@ function addRenamedProjectRow(node, newName) {
     node.appendChild(deleteTD);
 }
 
-function addProjectNameInputRow(node) {
+function addChangeProjectNameInputRow(node) {
     let newInputTD = document.createElement("td");
     newInputTD.setAttribute("id", "changeProjectNameInout");
     let textInput = document.createElement("input");
@@ -3514,6 +3547,13 @@ function selectProject(projects) {
             unselectProjects();
             event.target.parentElement.classList.add("is-selected");
             showtoDos(event.target.textContent, projects);
+            if (document.querySelector("#addTodo")) return;
+            let addTodoButton = document.createElement("button");
+            addTodoButton.className = "button is-dark";
+            addTodoButton.setAttribute("id", "addTodo");
+            addTodoButton.textContent = "Add To-Do";
+            document.querySelector("#toDos").appendChild(addTodoButton);
+            return event.target.textContent;
         }
     })
 }
@@ -3542,10 +3582,30 @@ function showtoDos(eventName, projects) {
                 strongTitle.textContent = project[toDo].title;
                 p.appendChild(strongTitle);
                 let smallDueDate = document.createElement("small");
-                const date = new Date(project[toDo].dueDate);
-                const formattedDate = Object(date_fns_format__WEBPACK_IMPORTED_MODULE_1__["default"])(date, 'do MMM yyyy');
-                smallDueDate.textContent = "Due: " + formattedDate;
-                p.appendChild(smallDueDate);
+                smallDueDate.classList.add("dueDate");
+                if (project[toDo].dueDate != "") {
+                    const date = new Date(project[toDo].dueDate);
+                    const formattedDate = Object(date_fns_format__WEBPACK_IMPORTED_MODULE_1__["default"])(date, 'do MMM yyyy');
+                    smallDueDate.textContent = "Due: " + formattedDate;
+                    p.appendChild(smallDueDate);
+                }
+                let smallPriority = document.createElement("small");
+                smallPriority.classList.add("exclamationMark");
+                for (let i = 0; i < project[toDo].priority.length; i++) {
+                    let i = document.createElement("i");
+                    i.className = "fas fa-exclamation";
+                    smallPriority.appendChild(i);
+                }
+                p.appendChild(smallPriority);
+                let smallEdit = document.createElement("small");
+                smallEdit.classList.add("smallEdit");
+                let iEdit = document.createElement("i");
+                iEdit.className = "fas fa-edit editTodo";
+                smallEdit.appendChild(iEdit);
+                p.appendChild(smallEdit);
+                let deleteA = document.createElement("a");
+                deleteA.className = "delete deleteTodo";
+                p.appendChild(deleteA);
                 let br = document.createElement("br");
                 p.appendChild(br);
                 p.appendChild(desc);
@@ -3556,30 +3616,6 @@ function showtoDos(eventName, projects) {
                 column.appendChild(divBox);
             }
         }
-    })
-}
-
-/*
-<div class="box">
-    <article class="media">
-        <div class="media-content">
-            <div class="content">
-                <p>
-                    <strong>Úkliddddddd</strong> <small>Due: 13th Jan 2019</small>
-                    <br>
-                    Uklidit v pokojíku.
-                </p>
-            </div>
-        </div>
-    </article>
-</div>
-*/
-
-function toDoModalHandler() {
-    document.addEventListener("click", (event) => {
-        let modal = document.querySelector(".modal");
-        if (event.target.classList.contains("modal-background") || event.target.classList.contains("modal-close") || event.target.classList.contains("cancel")) modal.classList.remove("is-active");
-        if (event.target.classList.contains("addProject")) modal.classList.add("is-active");
     })
 }
 
@@ -3605,12 +3641,14 @@ function removeAllChildrenOfNode(node) {
 /*!*********************!*\
   !*** ./src/data.js ***!
   \*********************/
-/*! exports provided: projectHandler */
+/*! exports provided: projectHandler, toDoHandler, removeTodo */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "projectHandler", function() { return projectHandler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toDoHandler", function() { return toDoHandler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeTodo", function() { return removeTodo; });
 /* harmony import */ var _DOM__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DOM */ "./src/DOM.js");
 /* harmony import */ var _factories__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./factories */ "./src/factories.js");
 
@@ -3622,6 +3660,122 @@ function projectHandler(projects) {
     changeProjectName(projects);
     removeProject(projects);
     Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["selectProject"])(projects);
+}
+
+function toDoHandler(projects) {
+    addNewTodo(projects);
+    editTodo(projects);
+}
+
+function removeTodo(projects) {
+    let todoName;
+    let counter = 0;
+    document.addEventListener("click", (event) => {
+        if (event.target.classList.contains("deleteTodo")) {
+            todoName = event.target.parentElement.firstChild.textContent;
+            projects.forEach(project => {
+                if (project.title == getSelectedProjectName()) {
+                    for (let property in project) {
+                        if (project[property].title == todoName) {
+                            delete project[property];
+                            for (property in project) {
+                                if (property != "title") {
+                                    delete Object.assign(project, {[counter]: project[property] })[property];
+                                    counter++;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["showtoDos"])(getSelectedProjectName(), projects);
+    });
+}
+
+function addNewTodo(projects) {
+    document.addEventListener("click", (event) => {
+        // Opens modal
+        if (event.target.getAttribute("id") == "addTodo") {
+            document.querySelector("#addTodoModal").classList.add("is-active");
+        }
+
+        // Adds Todo
+        if (event.target.getAttribute("id") == "addNewTodo") {
+            let newTitle = document.querySelector("#addTodoTitle").value;
+            let newDesc = document.querySelector("#addTodoDesc").value;
+            let newDate = document.querySelector("#addTodoDate").value;
+            let newPriority = document.querySelector("#addTodoPriority").value;
+            projects.forEach(project => {
+                if (project.title == getSelectedProjectName()) {
+                    if (!newTitle) {
+                        document.querySelector("#messageTitle").classList.add("is-active");
+                        return;
+                    }
+                    if (newDate) {
+                        if (/^[0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2}$/.test(newDate) != true) {
+                            document.querySelector("#messageDate").classList.add("is-active");
+                            return;
+                        }
+                    }
+                    project[(Object.keys(project).length) - 1] = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["todoFactory"])(newTitle, newDesc, newDate, newPriority);
+                    document.querySelector("#addTodoModal").classList.remove("is-active");
+                }
+            });
+            document.querySelector("#addTodoTitle").value = "";
+        }
+        Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["addTodoModalHandler"])(event);
+        Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["showtoDos"])(getSelectedProjectName(), projects);
+    });
+}
+
+function editTodo(projects) {
+    let selectedTodoName;
+    document.addEventListener("click", (event) => {
+        // Activate Edit To-Do modal
+        if (event.target.classList.contains("editTodo")) {
+            selectedTodoName = event.target.parentElement.parentElement.firstElementChild.textContent;
+            document.querySelector("#editTodo").classList.add("is-active");
+        }
+
+        // Edit To-Do
+        if (event.target.getAttribute("id") == "saveTodo") {
+            let newTitle = document.querySelector("#editTodoTitle").value;
+            let newDesc = document.querySelector("#editTodoDesc").value;
+            let newDate = document.querySelector("#editTodoDate").value;
+            let newPriority = document.querySelector("#priority").value;
+            projects.forEach(project => {
+                if (project.title == getSelectedProjectName()) {
+                    for (let toDo in project) {
+                        if (project[toDo].title == selectedTodoName) {
+                            if (!newTitle) {
+                                document.querySelector("#messageTitle").classList.add("is-active");
+                                return;
+                            };
+                            if (newDate) {
+                                if (/^[0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2}$/.test(newDate) != true) {
+                                    document.querySelector("#messageDate").classList.add("is-active");
+                                    return;
+                                } else {
+                                    project[toDo].dueDate = newDate;
+                                }
+                            }
+                            project[toDo].title = newTitle;
+                            project[toDo].desc = newDesc;
+                            project[toDo].priority = newPriority;
+                            document.querySelector("#editTodo").classList.remove("is-active");
+                        }
+                    }
+                }
+            });
+        }
+        Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["editTodoModalHandler"])(event);
+        Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["showtoDos"])(getSelectedProjectName(), projects);
+    });
+}
+
+function getSelectedProjectName() {
+    return document.querySelector(".is-selected").firstElementChild.textContent;
 }
 
 function addNewProject(projects) {
@@ -3649,13 +3803,12 @@ function addNewProject(projects) {
 function changeProjectName(projects) {
     let oldName;
     document.addEventListener("click", (event) => {
-        // Brings up name prompts
+        // Brings up name prompt
         if (event.target.getAttribute("id") == "editProjectName") {
             oldName = event.target.parentElement.parentElement.previousElementSibling.textContent;
             let projectRow = event.target.parentElement.parentElement.parentElement;
             Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["removeAllChildrenOfNode"])(projectRow);
-            // Add project name input row
-            Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["addProjectNameInputRow"])(projectRow);
+            Object(_DOM__WEBPACK_IMPORTED_MODULE_0__["addChangeProjectNameInputRow"])(projectRow);
         }
 
         // Changes the name
@@ -3754,13 +3907,14 @@ let toDo4 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["todoFactory"])("Rice
 let project1 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["projectFactory"])("School", toDo1, toDo2);
 let project2 = Object(_factories__WEBPACK_IMPORTED_MODULE_1__["projectFactory"])("Home", toDo3, toDo4);
 let projects = [project1, project2];
-console.log(projects)
 Object(_data__WEBPACK_IMPORTED_MODULE_2__["projectHandler"])(projects);
+Object(_data__WEBPACK_IMPORTED_MODULE_2__["toDoHandler"])(projects);
+Object(_data__WEBPACK_IMPORTED_MODULE_2__["removeTodo"])(projects)
+console.log(projects)
 
 const newYears = new Date("2019-3-13");
 const formattedDate = Object(date_fns_format__WEBPACK_IMPORTED_MODULE_4__["default"])(newYears, 'do MMM yyyy');
 document.addEventListener("click", (event) => console.log(event.target));
-
 
 /***/ }),
 

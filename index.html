@@ -34,7 +34,7 @@
       </div>
 
       <!-- ToDos -->
-      <div class="column">
+      <div class="column" id="toDos">
           <div class="container">
           <h3 class="title">ToDos</h3>
 
@@ -43,54 +43,140 @@
             <div class="column" id="column1"></div>
           </div> 
     </div>
+
   </section>
-    <!-- New toDo form
-    <div class="modal">
-      <div class="modal-background"></div>
+    <!-- Edit toDo form -->
+    <div class="modal" id="editTodo">
+      <div class="modal-background" id="editTodoModalBackground"></div>
       <div class="modal-content">
         <div class="box">
-        <h2 class="title is-3">Add New Project</h2>
-        <div class="field">
-          <label class="label">Project Title</label>
-          <div class="control">
-            <input class="input" placeholder="Project Title" type="text" id="title" name="title" required/>
+          <h2 class="title is-3">Edit To-Do</h2>
+          <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+              <input class="input" placeholder="Project Title" type="text" id="editTodoTitle" required/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Description</label>
+            <div class="control">
+              <input class="input" placeholder="Project Description" type="text" id="editTodoDesc" required/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Due Date</label>
+            <div class="control">
+              <input class="input" placeholder="YYYY-MM-DD" pattern="^[0-9]{4}\/[0-9]{1,2}\/[0-9]{1,2}$" type="text" id="editTodoDate" name="date" required/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Priority</label>
+            <div class="control">
+              <div class="select">
+                <select name="priority" id="priority">
+                  <option value="!" selected>!</option>
+                  <option value="!!">!!</option>
+                  <option value="!!!">!!!</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-dark" id="saveTodo">Save</button>
+            </div>
+            <div class="control">
+              <button class="button cancel">Cancel</button>
+            </div>
           </div>
         </div>
-        <div class="field">
-          <label class="label">Project Description</label>
-          <div class="control">
-            <input class="input" placeholder="Project Description" type="text" id="description" name="description" required/>
-          </div>
-        </div>
-        <div class="field">
-          <label class="label">Due Date</label>
-          <div class="control">
-            <input class="input" placeholder="DD/MM/YYYY" pattern="[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$" type="text" id="date" name="date" required/>
-          </div>
-        </div>
-      <div class="field">
-        <label class="label">Priority</label>
-        <div class="control">
-          <div class="select">
-            <select name="priority" id="priority">
-              <option value="!" selected>!</option>
-              <option value="!!">!!</option>
-              <option value="!!!">!!!</option>
-            </select>
-          </div>
-        </div>
-        <button class="modal-close is-large" aria-label="close"></button>
       </div>
-      <div class="field is-grouped">
-        <div class="control">
-          <button class="button is-dark" id="addProject">Add Project</button>
-        </div>
-        <div class="control">
-          <button class="button cancel">Cancel</button>
-        </div>
-      </div>
+      <button id="editTodoModalClose" class="modal-close is-large" aria-label="close"></button>
     </div>
-    -->
+
+    <!-- Add toDo form -->
+    <div class="modal" id="addTodoModal">
+      <div class="modal-background" id="addTodoModalBackground"></div>
+      <div class="modal-content">
+        <div class="box">
+          <h2 class="title is-3">Add To-Do</h2>
+          <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+              <input class="input" placeholder="Project Title" type="text" id="addTodoTitle" required/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Description</label>
+            <div class="control">
+              <input class="input" placeholder="Project Description" type="text" id="addTodoDesc" required/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Due Date</label>
+            <div class="control">
+              <input class="input" placeholder="YYYY-MM-DD" pattern="^[0-9]{4}\/[0-9]{1,2}\/[0-9]{1,2}$" type="text" id="addTodoDate" name="date" required/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Priority</label>
+            <div class="control">
+              <div class="select">
+                <select name="priority" id="addTodoPriority">
+                  <option value="!" selected>!</option>
+                  <option value="!!">!!</option>
+                  <option value="!!!">!!!</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field is-grouped">
+            <div class="control">
+              <button class="button is-dark" id="addNewTodo">Add To-Do</button>
+            </div>
+            <div class="control">
+              <button class="button cancel">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button id="addTodoModalClose" class="modal-close is-large" aria-label="close"></button>
+    </div>
+    
+    <!-- Invalid date message -->
+    <div class="modal" id="messageDate">
+      <div class="modal-background" id="messageBackgroundDate"></div>
+      <div class="modal-content">
+        <article class="message">
+          <div class="message-header">
+            <p>Invalid date format</p>
+            <button class="delete" aria-label="delete"></button>
+          </div>
+          <div class="message-body">
+            Date must be in format <em>YYYY-MM-DD</em>.
+          </div>
+        </article>
+      </div>
+      <button id="messageCloseDate" class="modal-close is-large" aria-label="close"></button>
+    </div>
+    
+
+    <!-- Invalid title message -->
+    <div class="modal" id="messageTitle">
+      <div class="modal-background" id="messageBackgroundTitle"></div>
+      <div class="modal-content">
+        <article class="message">
+          <div class="message-header">
+            <p>Invalid title</p>
+            <button class="delete" aria-label="delete"></button>
+          </div>
+          <div class="message-body">
+            To-Do title must not be empty.
+          </div>
+        </article>
+      </div>
+      <button id="messageCloseTitle" class="modal-close is-large" aria-label="close"></button>
+    </div>
 
 </body>
 </html>
