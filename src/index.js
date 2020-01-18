@@ -1,6 +1,6 @@
 import "./main.css"
 import { todoFactory, projectFactory } from "./factories"
-import { projectHandler } from "./data"
+import { projectHandler, toDoHandler, removeTodo } from "./data"
 import "bulma/css/bulma.css"
 import format from 'date-fns/format'
 
@@ -12,8 +12,10 @@ let toDo4 = todoFactory("Rice", "Cook rice", "2020-1-14", "!!");
 let project1 = projectFactory("School", toDo1, toDo2);
 let project2 = projectFactory("Home", toDo3, toDo4);
 let projects = [project1, project2];
-console.log(projects)
 projectHandler(projects);
+toDoHandler(projects);
+removeTodo(projects)
+console.log(projects)
 
 const newYears = new Date("2019-3-13");
 const formattedDate = format(newYears, 'do MMM yyyy');

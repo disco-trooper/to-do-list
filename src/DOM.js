@@ -1,6 +1,36 @@
 import { projectFactory } from "./factories"
 import format from 'date-fns/format'
 
+function editTodoModalHandler(event) {
+    // Close Edit To-Do Modal
+    if (event.target.getAttribute("id") == "editTodoModalBackground" || event.target.getAttribute("id") == "editTodoModalClose" || event.target.classList.contains("cancel")){
+        let editTodoModal = document.querySelector("#editTodo");
+        editTodoModal.classList.remove("is-active");
+    }
+    messageModalHandler(event);
+}
+
+function addTodoModalHandler(event) {
+    // Close Edit To-Do Modal
+    if (event.target.getAttribute("id") == "addTodoModalBackground" || event.target.getAttribute("id") == "addTodoModalClose" || event.target.classList.contains("cancel")){
+        let addTodoModal = document.querySelector("#addTodoModal");
+        addTodoModal.classList.remove("is-active");
+    }
+    messageModalHandler(event);
+}
+
+function messageModalHandler(event) {
+    // Close date message
+    if (event.target.getAttribute("id") == "messageBackgroundDate" || event.target.getAttribute("id") == "messageCloseDate") {
+        document.querySelector("#messageDate").classList.remove("is-active");
+    }
+
+    // Close title message
+    if (event.target.getAttribute("id") == "messageBackgroundTitle" || event.target.getAttribute("id") == "messageCloseTitle") {
+        document.querySelector("#messageTitle").classList.remove("is-active");
+    }
+}
+
 function renderProjects(projects) {
     let projectsTable = document.querySelector("#projectsTable");
     removeAllChildren("#projectsTable");
@@ -62,7 +92,7 @@ function addRenamedProjectRow(node, newName) {
     node.appendChild(deleteTD);
 }
 
-function addProjectNameInputRow(node) {
+function addChangeProjectNameInputRow(node) {
     let newInputTD = document.createElement("td");
     newInputTD.setAttribute("id", "changeProjectNameInout");
     let textInput = document.createElement("input");
@@ -131,6 +161,13 @@ function selectProject(projects) {
             unselectProjects();
             event.target.parentElement.classList.add("is-selected");
             showtoDos(event.target.textContent, projects);
+            if (document.querySelector("#addTodo")) return;
+            let addTodoButton = document.createElement("button");
+            addTodoButton.className = "button is-dark";
+            addTodoButton.setAttribute("id", "addTodo");
+            addTodoButton.textContent = "Add To-Do";
+            document.querySelector("#toDos").appendChild(addTodoButton);
+            return event.target.textContent;
         }
     })
 }
@@ -159,10 +196,30 @@ function showtoDos(eventName, projects) {
                 strongTitle.textContent = project[toDo].title;
                 p.appendChild(strongTitle);
                 let smallDueDate = document.createElement("small");
-                const date = new Date(project[toDo].dueDate);
-                const formattedDate = format(date, 'do MMM yyyy');
-                smallDueDate.textContent = "Due: " + formattedDate;
-                p.appendChild(smallDueDate);
+                smallDueDate.classList.add("dueDate");
+                if (project[toDo].dueDate != "") {
+                    const date = new Date(project[toDo].dueDate);
+                    const formattedDate = format(date, 'do MMM yyyy');
+                    smallDueDate.textContent = "Due: " + formattedDate;
+                    p.appendChild(smallDueDate);
+                }
+                let smallPriority = document.createElement("small");
+                smallPriority.classList.add("exclamationMark");
+                for (let i = 0; i < project[toDo].priority.length; i++) {
+                    let i = document.createElement("i");
+                    i.className = "fas fa-exclamation";
+                    smallPriority.appendChild(i);
+                }
+                p.appendChild(smallPriority);
+                let smallEdit = document.createElement("small");
+                smallEdit.classList.add("smallEdit");
+                let iEdit = document.createElement("i");
+                iEdit.className = "fas fa-edit editTodo";
+                smallEdit.appendChild(iEdit);
+                p.appendChild(smallEdit);
+                let deleteA = document.createElement("a");
+                deleteA.className = "delete deleteTodo";
+                p.appendChild(deleteA);
                 let br = document.createElement("br");
                 p.appendChild(br);
                 p.appendChild(desc);
@@ -173,30 +230,6 @@ function showtoDos(eventName, projects) {
                 column.appendChild(divBox);
             }
         }
-    })
-}
-
-/*
-<div class="box">
-    <article class="media">
-        <div class="media-content">
-            <div class="content">
-                <p>
-                    <strong>Úkliddddddd</strong> <small>Due: 13th Jan 2019</small>
-                    <br>
-                    Uklidit v pokojíku.
-                </p>
-            </div>
-        </div>
-    </article>
-</div>
-*/
-
-function toDoModalHandler() {
-    document.addEventListener("click", (event) => {
-        let modal = document.querySelector(".modal");
-        if (event.target.classList.contains("modal-background") || event.target.classList.contains("modal-close") || event.target.classList.contains("cancel")) modal.classList.remove("is-active");
-        if (event.target.classList.contains("addProject")) modal.classList.add("is-active");
     })
 }
 
@@ -214,4 +247,4 @@ function removeAllChildrenOfNode(node) {
     }
 }
 
-export { renderProjects, addNewProjectInputRow, addProjectNameInputRow, addRenamedProjectRow, deleteInputRow, selectProject, removeAllChildrenOfNode }
+export { addTodoModalHandler, showtoDos, editTodoModalHandler, renderProjects, addNewProjectInputRow, addChangeProjectNameInputRow, addRenamedProjectRow, deleteInputRow, selectProject, removeAllChildrenOfNode }
