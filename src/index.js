@@ -2,7 +2,7 @@ import "./main.css"
 import { todoFactory, projectFactory } from "./factories"
 import { projectHandler, toDoHandler, removeTodo } from "./data"
 import "bulma/css/bulma.css"
-import format from 'date-fns/format'
+import { format, parse } from 'date-fns'
 
 let toDo1 = todoFactory("Civil process", "Learn the civil process", "2020-1-14", "!!!");
 let toDo2 = todoFactory("Family law", "Learn the family law", "2020-1-14", "!!");
@@ -17,6 +17,4 @@ toDoHandler(projects);
 removeTodo(projects)
 console.log(projects)
 
-const newYears = new Date("2019-3-13");
-const formattedDate = format(newYears, 'do MMM yyyy');
 document.addEventListener("click", (event) => console.log(event.target));

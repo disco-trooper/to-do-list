@@ -1,5 +1,6 @@
 import { showtoDos,editTodoModalHandler,renderProjects, addNewProjectInputRow, deleteInputRow,removeAllChildrenOfNode, selectProject, addChangeProjectNameInputRow, addRenamedProjectRow, addTodoModalHandler } from "./DOM"
 import { projectFactory, todoFactory } from "./factories"
+import { format, parse } from 'date-fns'
 
 function projectHandler(projects) {
     renderProjects(projects);
@@ -70,6 +71,8 @@ function addNewTodo(projects) {
                 }
             });
             document.querySelector("#addTodoTitle").value = "";
+            document.querySelector("#addTodoDesc").value = "";
+            document.querySelector("#addTodoDate").value = "";
         }
         addTodoModalHandler(event);
         showtoDos(getSelectedProjectName(), projects);
@@ -83,6 +86,10 @@ function editTodo(projects) {
         if (event.target.classList.contains("editTodo")) {
             selectedTodoName = event.target.parentElement.parentElement.firstElementChild.textContent;
             document.querySelector("#editTodo").classList.add("is-active");
+            document.querySelector("#editTodoTitle").value = selectedTodoName;
+            document.querySelector("#editTodoDesc").value = event.target.parentElement.parentElement.lastChild.textContent;
+            let formatedDate = event.target.parentElement.parentElement.firstElementChild.nextSibling.textContent.slice(5);
+            document.querySelector("#editTodoDate").value = format(parse(formatedDate, "do MMM yyyy", new Date()), 'yyyy-M-d')
         }
 
         // Edit To-Do
@@ -115,6 +122,9 @@ function editTodo(projects) {
                     }
                 }
             });
+            document.querySelector("#editTodoTitle").value = "";
+            document.querySelector("#editTodoDesc").value = "";
+            document.querySelector("#editTodoDate").value = "";
         }
         editTodoModalHandler(event);
         showtoDos(getSelectedProjectName(), projects);

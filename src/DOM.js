@@ -182,7 +182,8 @@ function showtoDos(eventName, projects) {
                 if (toDo == "title") continue;
                 let column = document.querySelector("#column" + `${currentColumn}`);
                 (!currentColumn) ? currentColumn++ : currentColumn--;
-                let desc = document.createTextNode(project[toDo].desc);
+                let desc = document.createElement("span");
+                desc.textContent = project[toDo].desc;
                 let divBox = document.createElement("div");
                 divBox.className = "box";
                 let article = document.createElement("article");
