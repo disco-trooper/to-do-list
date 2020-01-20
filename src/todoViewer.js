@@ -59,9 +59,15 @@ const todoViewer = (() => {
                     let smallDueDate = document.createElement("small");
                     smallDueDate.classList.add("dueDate");
                     if (project[toDo].dueDate != "") {
-                        const date = new Date(project[toDo].dueDate);
-                        const formattedDate = format(date, 'do MMM yyyy');
-                        smallDueDate.textContent = "Due: " + formattedDate;
+                        try {
+                            const date = new Date(project[toDo].dueDate);
+                            const formattedDate = format(date, 'do MMM yyyy');
+                            smallDueDate.textContent = "Due: " + formattedDate;
+                        }
+
+                        catch(err) {
+                            smallDueDate.textContent = "Due: " + project[toDo].dueDate;
+                        }
                         p.appendChild(smallDueDate);
                     }
                     let smallPriority = document.createElement("small");
