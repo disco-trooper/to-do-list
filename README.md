@@ -16,7 +16,7 @@
 
 > A simple online to-do-list with localStorage.
 
-### ✨ [Demo](http://disco-trooper.github.io/calculator/)
+### ✨ [Demo](https://disco-trooper.github.io/to-do-list/)
 
 ## Install
 
