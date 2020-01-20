@@ -16,20 +16,12 @@
 
 > A simple online to-do-list with localStorage.
 
-### 🏠 [Homepage](https://github.com/disco-trooper/to-do-list#readme)
-
 ### ✨ [Demo](http://disco-trooper.github.io/calculator/)
 
 ## Install
 
 ```sh
 npm install
-```
-
-## Run tests
-
-```sh
-npm run test
 ```
 
 ## Author
