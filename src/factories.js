@@ -6,7 +6,6 @@ const factories = (() => {
     const projectFactory = (title,...toDos) => {
         return {title, ...toDos};
     }
-    
     return { todoFactory, projectFactory }
 })();
 

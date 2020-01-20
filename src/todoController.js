@@ -30,8 +30,9 @@ const todoController = (() => {
                         }
                     }
                 });
+                localStorage.setItem("projects", JSON.stringify(projects));
+                todoViewer.showTodos(getSelectedProjectName(), projects);
             }
-            todoViewer.showTodos(getSelectedProjectName(), projects);
         });
     }
 
@@ -64,12 +65,13 @@ const todoController = (() => {
                         document.querySelector("#addTodoModal").classList.remove("is-active");
                     }
                 });
+                localStorage.setItem("projects", JSON.stringify(projects));
                 document.querySelector("#addTodoTitle").value = "";
                 document.querySelector("#addTodoDesc").value = "";
                 document.querySelector("#addTodoDate").value = "";
+                todoViewer.showTodos(getSelectedProjectName(), projects);
             }
             todoViewer.addTodoModalHandler(event);
-            todoViewer.showTodos(getSelectedProjectName(), projects);
         });
     }
 
@@ -116,12 +118,13 @@ const todoController = (() => {
                         }
                     }
                 });
+                localStorage.setItem("projects", JSON.stringify(projects));
                 document.querySelector("#editTodoTitle").value = "";
                 document.querySelector("#editTodoDesc").value = "";
                 document.querySelector("#editTodoDate").value = "";
+                todoViewer.showTodos(getSelectedProjectName(), projects);
             }
             todoViewer.editTodoModalHandler(event);
-            todoViewer.showTodos(getSelectedProjectName(), projects);
         });
     }
 

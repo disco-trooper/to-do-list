@@ -14,6 +14,7 @@ const projectController = (() => {
     function addNewProject(projects) {
         document.addEventListener("click", (event) => {
             if (event.target.getAttribute("id") == "addNewProject") {
+                document.querySelector(".is-selected").classList.remove("is-selected");
                 projectViewer.addNewProjectInputRow();
             }
             // Add project
@@ -24,6 +25,7 @@ const projectController = (() => {
                 projectViewer.removeAllChildren("#column0");
                 projectViewer.removeAllChildren("#column1");
                 projects.push(newProject);
+                localStorage.setItem("projects", JSON.stringify(projects));
                 projectViewer.deleteInputRow();
                 projectViewer.renderProjects(projects);
                 let selectedProject = document.querySelector(".is-selected");
@@ -59,7 +61,8 @@ const projectController = (() => {
                         if (project.title == oldName) {
                             project.title = newName;
                         }
-                    })
+                    });
+                    localStorage.setItem("projects", JSON.stringify(projects));
                 }
             }
             if (event.target.getAttribute("id") == "cancelProjectRename") projectViewer.renderProjects(projects);
@@ -80,9 +83,15 @@ const projectController = (() => {
                     if (projects[i].title == projectName) {
                         projects[i] = undefined;
                         projectViewer.renderProjects(projects);
-                        return;
                     }
                 }
+                for (let i = 0; i < projects.length; i++) {
+                    if (projects[i] == null) projects.splice(i, 1); 
+                }
+                if (projects.length == 0) {
+                    localStorage.setItem("addDummies", false);
+                }
+                localStorage.setItem("projects", JSON.stringify(projects));
             }
         })
     }
