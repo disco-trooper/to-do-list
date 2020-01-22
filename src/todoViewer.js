@@ -60,8 +60,8 @@ const todoViewer = (() => {
                     smallDueDate.classList.add("dueDate");
                     if (project[toDo].dueDate != "") {
                         try {
-                            const date = new Date(project[toDo].dueDate);
-                            const formattedDate = format(date, 'do MMM yyyy');
+                            let date = new Date(project[toDo].dueDate);
+                            let formattedDate = format(date, 'do MMM yyyy');
                             smallDueDate.textContent = "Due: " + formattedDate;
                         }
 
