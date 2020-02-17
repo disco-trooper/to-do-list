@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  mode: "production",
+  mode: 'production',
   entry: './src/index.js',
   output: {
     filename: 'main.js',
@@ -11,7 +11,7 @@ module.exports = {
   watch: true,
   module: {
     rules: [
-      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
+      { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' },
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
