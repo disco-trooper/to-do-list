@@ -34,6 +34,3 @@ npm install
 
 Copyright © 2020 [disco-trooper](https://github.com/disco-trooper).<br />
 This project is [MIT](https://github.com/disco-trooper/to-do-list/blob/master/LICENSE) licensed.
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
