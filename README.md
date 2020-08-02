@@ -3,9 +3,6 @@
   <a href="https://www.npmjs.com/package/to-do-list" target="_blank">
     <img alt="Version" src="https://img.shields.io/npm/v/to-do-list.svg">
   </a>
-  <a href="https://github.com/disco-trooper/to-do-list#readme" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
-  </a>
   <a href="https://github.com/disco-trooper/to-do-list/graphs/commit-activity" target="_blank">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
@@ -14,7 +11,7 @@
   </a>
 </p>
 
-> A simple online to-do-list with localStorage.
+> A simple online to-do-list with localStorage. Project made as a part of [The Odin Project's curriculum](https://www.theodinproject.com/courses/javascript/lessons/todo-list).
 
 ### ✨ [Demo](https://disco-trooper.github.io/to-do-list/)
 
