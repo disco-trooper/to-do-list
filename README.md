@@ -11,7 +11,7 @@
   </a>
 </p>
 
-> A simple online to-do-list with localStorage. Project made as a part of [The Odin Project's curriculum](https://www.theodinproject.com/courses/javascript/lessons/todo-list).
+> A simple online to-do-list with localStorage.
 
 ### ✨ [Demo](https://disco-trooper.github.io/to-do-list/)
 
